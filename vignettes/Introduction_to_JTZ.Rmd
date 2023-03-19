@@ -1,0 +1,130 @@
+---
+title: "Introduction to JTZ"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Introduction to JTZ}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+
+```{r, include = FALSE}
+library(JTZ)
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+There are four families of functions in JTZ:
+
+- **Random data generation**: these functions provide a way to generate random data according to the three random data generation methods in Jiang et al.(2022).
+
+- **Calculated statistics**: these functions are used to calculate the statistics and the real treat effects used in Jiang et al.(2022).
+
+- **Estimation strategy**: these functions provide a method for estimating treatment effects according to the four estimation strategies presented in Jiang et al.(2022).
+
+- **Output function**: this function integrates the functions of the above three types of functions and provides a means of output results.
+
+## Random data generation
+This section contains two functions, `FuncDGP` and `CovAdptRnd`:
+
+- `FuncDGP` allows users to generate the corresponding random data using the three algorithms (i), (ii), and (iii) declared in the data generation process in Section 9.1 Data Generating Processes of Jiang et al.(2022), p30-p31.
+
+- `CovadptRnd` provides four random assignment treatment methods proposed in Section 2.Setup of Jiang et al.(2022), p8-p9.
+
+- Combined with the above two functions, users can generate 3 x 4 = 12 kinds of random data. 
+
+```{r}
+# Parameter dgpflag declares three ways to generate random data.
+# FuncDGP will generate random data according to the method specified in (i), (ii) or (iii) when dgpflag = 1, 2 or 3 respectively.
+
+# Parameter rndflag declares four ways to randomly assign treatment effects.
+# rndflag = 1 - SRS; rndflag = 2 - WEI; rndflag = 3 - BCD; rndflag = 4 - SBR
+# Note that CovadpRnd is built into FuncDGP, so it is not necessary to use CovadpRnd alone in the actual operation of generating random data
+
+# Let's take dgpflag=1 and rndflag=2 for example
+random_dgp <- FuncDGP(dgptype = 1, rndflag = 2, n = 100, g = 4, pi = 0.5)
+# We can see that the return value of FuncDGP is a list of nine matrices, We can easily extract what we need from it
+Y <- random_dgp$Y
+X <- random_dgp$X
+S <- random_dgp$S
+A <- random_dgp$A
+Y1 <- random_dgp$Y1
+Y0 <- random_dgp$Y0
+D1 <- random_dgp$D1
+D0 <- random_dgp$D0
+D <- random_dgp$D
+```
+
+## Calculated statistics
+This section contains four functions including `TrueValue`, `pihat`, `tau` and `stanE`.
+
+- `pihat`, `tau` and `stanE` computes estimated pi, tau and sigma respectively, see Jiang et al.(2022) for more details.
+
+```{r}
+# compute estimated tau
+tauhat <- tau(muY1 = Y1, muY0 = Y0, muD1 = D1, muD0 = D0, A = A, S = S, Y = Y, D = D)
+
+#compute estimated pi
+pihat(A = A, S = S)
+
+# compute estimated sigma
+stanE(muY1 = Y1, muY0 = Y0, muD1 = D1, muD0 = D0, A = A, S = S, Y = Y, D = D, tauhat = tauhat)
+```
+- `TrueValue` differs a little from the above three functions，it don't calculate the LATE of a specified random data (dgpflag = 1, 2, or 3), but calculate the LATE of all four kinds of data (rndflag = 1, 2, 3 and 4) in one random data generation method (dgpflag = 1, 2, or 3). So when we run truevalue we get four values at once.
+
+```{r, message=FALSE,results='hide'}
+# let's take dgpflag = 1 for example.
+true_value <- TrueValue(dgptype = 1, vIdx = 1:4, n = 100, g = 4, pi = 0.5)
+true_tau <- true_value$tau
+```
+```{r}
+# SRS - WEI - BCD - SBR
+true_tau
+```
+
+## Estimation strategy
+This section contains three functions including `LogisticReg`, `feasiblePostLassoMatTool` and `LinearLogit`.
+
+- `LinearLogit` provides users with three regression estimation combination strategies: linear + linear (modelflag = 1), linear + logit (modelflag = 2), and method for high dimensional data (modelflag = 3), see Jiang et al.(2022) for more details. 
+
+- `feasiblePostLassoMatTool` is the computing engine for function `LinearLogit` when modelflag = 3.
+
+- `LogisticReg` provides a simple way to run logit regression.
+
+```{r}
+# remember that we set dgpflag = 1 and rndflag = 2 before
+LinearLogit(Y = Y, D = D, A = A, X = X, S = S, s = 4, modelflag = 1, iridge = 0.001)
+```
+
+## Output function
+`Output` is the most important integration function, which has the functions of generating random data, estimating treat effects by regression analysis based on different estimation strategies: (1) NA (2) LP (3) LG (4) F (5) NP (6) lasso (7) 2SLS (8) NP+lasso
+and summarizing analysis results. This function is key to generating Table 1 in Jiang et al.(2022). See the paper for more details about all the estimation strategies.
+
+```{r}
+# set random seed
+set.seed(1)
+```
+```{r, results='hide'}
+# get true tau
+true_tau <- TrueValue(dgptype = 1, vIdx = 1:4, n = 1000, g = 4, pi = 0.5)
+```
+```{r, warning=FALSE}
+# see the output: size, iPert = 0
+Output(ii = 1, tau = tauhat[1], dgptype = 1, rndflag = 1, n = 1000, g = 4, pi = 0.5,
+       iPert = 0, iq = 0.05, iridge = 0.001)
+
+# see the output: power, iPert = 1
+Output(ii = 1, tau = tauhat[1], dgptype = 1, rndflag = 1, n = 1000, g = 4, pi = 0.5,
+       iPert = 1, iq = 0.05, iridge = 0.001)
+
+```
+
+## Reference
+Jiang L, Linton O B, Tang H, Zhang Y. Improving estimation efficiency via regression-adjustment in covariate-adaptive randomizations with imperfect compliance [J]. 2022.
+
+
+
+
+

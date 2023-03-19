@@ -1,0 +1,41 @@
+Package: JTZ
+Type: Package
+Title: Improving Estimation Efficiency via Regression-Adjustment in Covariate-Adaptive Randomizations with Imperfect Compliance
+Version: 0.1.0
+Authors@R: 
+    c(person(given = "Liang",
+             family = "Jiang",
+             role = c("aut", "cph"),
+             email = "jiangliang@fudan.edu.cn"),
+             person(given = "Haihan",
+             family = "Tang",
+             role = c("aut", "cph"),
+             email = "hhtang@fudan.edu.cn"),
+             person(given = "Yicong",
+             family = "Zhang",
+             role = c("aut", "cph")),
+             person(given = "Mingxin",
+             family = "Zhang",
+             role = c("cre"),
+             email = "21110680035@m.fudan.edu.cn"))
+Description: Based on Jiang et al.(2022)，This package provides a list of functions for replicating the data simulation portion.
+    In particular, we provide corresponding functions for generating the three types of random data described in this paper,
+    as well as all the estimation strategies. 
+    Detailed information about the data generation process and estimation strategy can be found in Jiang et al.(2022).
+License: MIT + file LICENSE
+Encoding: UTF-8
+LazyData: true
+URL: 
+Imports: 
+    pracma,
+    MASS,
+    stringr,
+    splus2R, 
+    glmnet,
+    purrr,
+    stats
+RoxygenNote: 7.2.3
+Suggests: 
+    knitr,
+    rmarkdown
+VignetteBuilder: knitr
