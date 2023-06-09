@@ -1,32 +1,32 @@
 #' @title Computes All the Estimators
 #' @description
-#'    Output is an integrated function that computes all the estimates used in Jiang et al.(2022).
+#'    Output is an integrated function that computes all the estimates (including NA, TSLS, L, NL, F, NP, R) used in Jiang et al. (2022).
 #'    See the paper for more details.
 #'
-#' @param ii Monte carlo index.
+#' @param ii Monte Carlo index.
 #' @param tau A scalar. The simulated true LATE effect.
-#' @param dgptype A Scalar. 1, 2, 3 (See Jiang et al.(2022) for DGP details).
-#' @param rndflag Method of CAR(covariate-adaptive randomizations).
+#' @param dgptype A Scalar. 1, 2, 3 (See Jiang et al. (2022) for DGP details).
+#' @param rndflag Method of CAR (covariate-adaptive randomizations).
 #'    Its value can be 1, 2, 3 or4. 1-SRS; 2-WEI; 3-BCD; 4-SBR.
-#'    See Jiang et al.(2022) for more details about CAR.
+#'    See Jiang et al. (2022) for more details about CAR.
 #' @param n Sample size.
-#' @param g Number of strata. We set g=4 in Jiang et al.(2022).
-#' @param pi Targeted assignment probability.
+#' @param g Number of strata. The authors set g=4 in Jiang et al. (2022).
+#' @param pi Targeted assignment probability across strata.
 #' @param iPert A scalar. iPert =0 means size. Otherwise means power: iPert is the perturbation of false null.
-#' @param iq  Size of hypothesis testing. We set iq = 0.05.
+#' @param iq  Size of hypothesis testing. The authors set iq = 0.05 in Jiang et al. (2022).
 #' @param iridge  A scalar. The penalization parameter in ridge regression.
 #'
 #' @return A list containing four matrices named vtauhat, vsighat, vstat and vdeci respectively.
-#'    vtauhat is a 1x8 vector: (1) NA (2) LP (3) LG (4) F (5) NP (6) lasso (7) 2SLS (8) NP+lasso.
+#'    vtauhat is a 1x8 vector: (1) NA (2) LP (3) LG (4) F (5) NP (6) R (when dgp = 3) (7) 2SLS (8) R (when dgp = 1 or 2).
 #'    vsighat is a 1x8 vector: unscaled standard errors for vtauhat.
 #'    vstat is a 1x8 vector: test statistic.
 #'    vdeci is a 1x8 logical vector: if applicable, 1 means rejecting the null. 0 means not rejecting the null.
 #'
 #' @export
-#' @references Jiang L, Linton O B, Tang H, et al. Improving estimation efficiency via regression-adjustment in covariate-adaptive randomizations with imperfect compliance [J]. 2022.#'
+#' @references Jiang L, Linton O B, Tang H, Zhang Y. Improving estimation efficiency via regression-adjustment in covariate-adaptive randomizations with imperfect compliance [J]. 2022.
 #' @examples
 #' Output(ii = 1, tau = 0.9122762, dgptype = 1,
-#'        rndflag = 4, n = 2000, g = 4, pi = 0.5,
+#'        rndflag = 4, n = 2000, g = 4, pi = c(0.5,0.5,0.5,0.5),
 #'        iPert = 1, iq = 0.05, iridge = 0.001)
 Output <- function(ii, tau, dgptype, rndflag, n, g, pi, iPert, iq, iridge) {
 
@@ -38,12 +38,14 @@ Output <- function(ii, tau, dgptype, rndflag, n, g, pi, iPert, iq, iridge) {
   S <- DGP[["S"]]
   A <- DGP[["A"]]
   D <- DGP[["D"]]
-  vtauhat <- NaN*ones(1,8)
-  vsighat <- NaN*ones(1,8)
-  vstat <- NaN*ones(1,8)
-  vdeci   <- NaN*ones(1,8)
+  vtauhat <- NaN*ones(1,12)
+  vsighat <- NaN*ones(1,12)
+  vstat <- NaN*ones(1,12)
+  vdeci   <- NaN*ones(1,12)
 
+  #######################
   # No adjustment (z)
+  #######################
   muY0_z <- zeros(n,1)
   muY1_z <- zeros(n,1)
   muD0_z <- zeros(n,1)
@@ -57,7 +59,9 @@ Output <- function(ii, tau, dgptype, rndflag, n, g, pi, iPert, iq, iridge) {
 
   if (dgptype != 3) {
 
-    # 2SLS
+    ################
+    # 7 2SLS (iv)
+    ################
     mS_iv <- zeros(n, max(S))
     for (s in 1:max(S)) {
       mS_iv[S==s, s] <- 1
@@ -65,7 +69,7 @@ Output <- function(ii, tau, dgptype, rndflag, n, g, pi, iPert, iq, iridge) {
 
     mX_iv <-cbind(D, X, mS_iv)
     mZ_iv <- cbind(A, X, mS_iv)
-    vPara_iv <- mldivide(t(mZ_iv) %*% mZ_iv, t(mZ_iv) %*% Y)
+    vPara_iv <- inv(t(mZ_iv) %*% mX_iv) %*% t(mZ_iv) %*% Y
     mE_iv2 <- diag(((Y - mX_iv %*% vPara_iv)^2)[,])
     m0_iv <- mldivide(t(mZ_iv) %*% mX_iv/n, t(mZ_iv) %*% mE_iv2 %*% mZ_iv/n) %*% inv(t(mX_iv) %*% mZ_iv/n)
     vtauhat[7] <- vPara_iv[1]
@@ -73,7 +77,9 @@ Output <- function(ii, tau, dgptype, rndflag, n, g, pi, iPert, iq, iridge) {
     vstat[7] <- abs(sqrt(n)*(vtauhat[7]-tau-iPert))/vsighat[7]
     vdeci[7] <- vstat[7]>norminv(1-iq/2)
 
-    # Linear + Linear model (a)
+    #############################
+    # 2 Linear + Linear model (a)
+    #############################
     muY0_a <- NaN*ones(n,1)
     muY1_a <- NaN*ones(n,1)
     muD0_a <- NaN*ones(n,1)
@@ -100,7 +106,9 @@ Output <- function(ii, tau, dgptype, rndflag, n, g, pi, iPert, iq, iridge) {
     vstat[2] <- abs(sqrt(n)*(vtauhat[2] - tau - iPert))/vsighat[2]
     vdeci[2] <- vstat[2] > norminv(1-iq/2)
 
-    # Linear + Logistic model (b)
+    ################################
+    # 3 Linear + Logistic model (b)
+    ################################
     muY0_b <- NaN*ones(n,1)
     muY1_b <- NaN*ones(n,1)
     muD0_b <- NaN*ones(n,1)
@@ -127,7 +135,9 @@ Output <- function(ii, tau, dgptype, rndflag, n, g, pi, iPert, iq, iridge) {
     vstat[3] <- abs(sqrt(n)*(vtauhat[3] - tau - iPert))/vsighat[3]
     vdeci[3] <- vstat[3] > norminv(1-iq/2)
 
-    # Further Efficiency Improvement (c)
+    ########################################
+    # 4 Further Efficiency Improvement (c)
+    ########################################
     X_c <- cbind(X, muD1_b, muD0_b)
     muY0_c <- NaN*ones(n,1)
     muY1_c <- NaN*ones(n,1)
@@ -155,7 +165,10 @@ Output <- function(ii, tau, dgptype, rndflag, n, g, pi, iPert, iq, iridge) {
     vstat[4] <- abs(sqrt(n)*(vtauhat[4] - tau - iPert))/vsighat[4]
     vdeci[4] <- vstat[4] > norminv(1-iq/2)
 
-    # Nonparametric (d)
+    ###########################
+    # 5 Nonparametric (d)
+    ###########################
+
     mH <-splinebasis(X = X)
     X_d <- cbind(X, X^2,mH, mH[,1]*mH[,2], X[,1]*X[,2])
     muY0_d <- NaN*ones(n,1)
@@ -199,8 +212,10 @@ Output <- function(ii, tau, dgptype, rndflag, n, g, pi, iPert, iq, iridge) {
     vstat[5] <- abs(sqrt(n)*(vtauhat[5] - tau - iPert))/vsighat[5]
     vdeci[5] <- vstat[5] > norminv(1-iq/2)
 
-    # Nonparametric + Lasso (f)
-    X_f <- cbind(X, X^2, X[,1]*X[,2], mH, mH^2, mH[,1]*mH[,2])
+    ################################
+    # 8 R Nonparametric + Lasso (f)
+    ################################
+    X_f <- cbind(X, X^2, mH, mH[,1]*mH[,2], X[,1]*X[,2])
     muY0_f <- NaN*ones(n,1)
     muY1_f <- NaN*ones(n,1)
     muD0_f <- NaN*ones(n,1)
@@ -244,7 +259,9 @@ Output <- function(ii, tau, dgptype, rndflag, n, g, pi, iPert, iq, iridge) {
 
   } else if (dgptype == 3) {
 
-    #High-dimensional (e)
+    ########################
+    # 6 Lasso High-dimensional (e)
+    ########################
     muY0_e <- NaN*ones(n,1)
     muY1_e <- NaN*ones(n,1)
     muD0_e <- NaN*ones(n,1)
@@ -277,7 +294,9 @@ Output <- function(ii, tau, dgptype, rndflag, n, g, pi, iPert, iq, iridge) {
     vdeci[6] <- vstat[6] > norminv(1-iq/2)
   }
 
+  ########################
   # Monte Carlo Tracking
+  ########################
   print(str_c("Currently at ", ii, " th sample!"))
 
   #return results

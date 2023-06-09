@@ -8,31 +8,32 @@ TrueValue(dgptype, vIdx, n, g, pi)
 }
 \arguments{
 \item{dgptype}{A scalar. The value can be string 1, 2, or 3,
-respectively corresponding to the three random data generation methods in the paper (See Jiang et al.(2022)for DGP details)}
+respectively corresponding to the three random data generation methods in the paper (See Jiang et al. (2022)for DGP details)}
 
-\item{vIdx}{A 1xR vector. We set vIdx=[1 2 3 4]. Every number declares the method of covariate-adaptive randomization.
-1-SRS; 2-WEI; 3-BCD; 4-SBR.}
+\item{vIdx}{A 1xR vector. The authors set vIdx=[1 2 3 4]. Every number declares the method of covariate-adaptive randomization
+which simulates the LATE across different CAR schemes: 1-SRS; 2-WEI; 3-BCD; 4-SBR.}
 
 \item{n}{Sample size.}
 
-\item{g}{Number of strata. We set g=4 in Jiang et al.(2022).}
+\item{g}{Number of strata. The authors set g=4 in Jiang et al. (2022).}
 
-\item{pi}{Targeted assignment probability.}
+\item{pi}{Targeted assignment probability across strata.}
 }
 \value{
 A list containing two vectors named tau and mPort.
-   tau is a 1xR vector which Simulated true LATE effect,
-   mPort is a 3xR vector. 1st row: NT. 2nd row: Compiler. 3rd row: AT.
+   tau is a 1xR vector which Simulated true LATE effect, mPort is a 3xR vector.
+   The 1st row of mPort: the LATE of never takers across varies CAR schemes,
+   the 2nd row of mPort: the LATE of compilers across varies CAR schemes,
+   the 3rd row of mPort: the LATE of always takers across varies CAR schemes.
 }
 \description{
-Calculate the true LATE tau in Jiang et al.(2022). TrueValue is based on Yubo Tao's code.
+Calculate the true LATE tau in Jiang et al. (2022).
 }
 \examples{
-TrueValue(dgptype = 1, vIdx = c(1,2,3,4), n=100, g = 4, pi = 0.5)
-TrueValue(dgptype = 2, vIdx = c(1,2,3,4), n=100, g = 4, pi = 0.5)
-TrueValue(dgptype = 3, vIdx = c(1,2,3,4), n=100, g = 4, pi = 0.5)
-
+# TrueValue(dgptype = 1, vIdx = c(1,2,3,4), n=100, g = 4, pi = c(0.5,0.5,0.5,0.5))
+# TrueValue(dgptype = 2, vIdx = c(1,2,3,4), n=100, g = 4, pi = c(0.5,0.5,0.5,0.5))
+# TrueValue(dgptype = 3, vIdx = c(1,2,3,4), n=100, g = 4, pi = c(0.5,0.5,0.5,0.5))
 }
 \references{
-Jiang L, Linton O B, Tang H, et al. Improving estimation efficiency via regression-adjustment in covariate-adaptive randomizations with imperfect compliance [J]. 2022.
+Jiang L, Linton O B, Tang H, Zhang Y. Improving estimation efficiency via regression-adjustment in covariate-adaptive randomizations with imperfect compliance [J]. 2022.
 }

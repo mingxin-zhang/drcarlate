@@ -2,28 +2,30 @@
 % Please edit documentation in R/pihat.R
 \name{pihat}
 \alias{pihat}
-\title{Compute Estimated Pi}
+\title{Compute Estimated Treatment Assignment Probabilities}
 \usage{
-pihat(A, S)
+pihat(A, S, stratnum = NULL)
 }
 \arguments{
 \item{A}{A nx1 vector.}
 
 \item{S}{A nx1 vector.}
+
+\item{stratnum}{A nx1 vector about the unique strara numbers, the default value is NULL.}
 }
 \value{
-A nx1 cector, each element corresponds to  the estimated pi in Jiang et al.(2022).
+A nx1 cector, each element corresponds to the targeted treatment assignment probabilities across all strata in Jiang et al. (2022).
 }
 \description{
-Pihat computes the estimated pi in Jiang et al.(2022) and stacks them in an nx1 vector.
+Pihat computes the targeted treatment assignment probabilities across all strata in Jiang et al. (2022) and stacks them in an nx1 vector.
 }
 \examples{
-DGP <-FuncDGP(dgptype = 1,rndflag = 2,n = 100,g = 4,pi = 0.5)
+DGP <-FuncDGP(dgptype = 1,rndflag = 2,n = 100,g = 4,pi = c(0.5, 0.5, 0.5, 0.5))
 A <- DGP[["A"]]
 S <- DGP[["S"]]
 pihat(A = A, S = S)
 
 }
 \references{
-Jiang L, Linton O B, Tang H, et al. Improving estimation efficiency via regression-adjustment in covariate-adaptive randomizations with imperfect compliance [J]. 2022.
+Jiang L, Linton O B, Tang H, Zhang Y. Improving estimation efficiency via regression-adjustment in covariate-adaptive randomizations with imperfect compliance [J]. 2022.
 }

@@ -1,34 +1,34 @@
 #' Generate Data for LATE
 #' @description
-#' Generate three types of random data according to the forms in Jiang et al.(2022). FuncDGP is based on Yubo Tao's code.
+#' Generate data according to one of the three DGPs in Jiang et al. (2022).
 #' @import stats
-#' @param dgptype A Scalar. 1, 2, 3 (See Jiang et al.(2022) for DGP details)
+#' @param dgptype A Scalar. 1, 2, 3 (See Jiang et al. (2022) for DGP details)
 #' @param rndflag A Scalar. Declare the method of covariate-adaptive randomization. 1-SRS; 2-WEI; 3-BCD; 4-SBR.
 #' @param n Sample size
-#' @param g Number of strata. We set g=4 in the Jiang et al.(2022).
-#' @param pi Targeted assignment probability
+#' @param g Number of strata. The authors set g=4 in the Jiang et al. (2022).
+#' @param pi Targeted assignment probability across strata.
 #'
-#' @return FuncDGP returns a list containing 5 nx1 vectors named Y, X, S, A, and D.
-#'    These five vectors correspond to the five observed vectors in Jiang et al.(2022).
+#' @return FuncDGP returns a list containing 9 nx1 vectors named Y, X, S, A, Y1, Y0, D1, D0 and D.
+#'    These nine vectors are the same as defined in Jiang et al. (2022).
 #'    Note that vector X does not contain the constant term.
 
 #' @export
-#' @references Jiang L, Linton O B, Tang H, et al. Improving estimation efficiency via regression-adjustment in covariate-adaptive randomizations with imperfect compliance [J]. 2022.
+#' @references Jiang L, Linton O B, Tang H, Zhang Y. Improving estimation efficiency via regression-adjustment in covariate-adaptive randomizations with imperfect compliance [J]. 2022.
 #' @examples
-#' FuncDGP(dgptype = 1, rndflag = 1, n = 200, g = 4, pi = 0.5)
-#' FuncDGP(dgptype = 1, rndflag = 2, n = 200, g = 4, pi = 0.5)
-#' FuncDGP(dgptype = 1, rndflag = 3, n = 200, g = 4, pi = 0.5)
-#' FuncDGP(dgptype = 1, rndflag = 4, n = 200, g = 4, pi = 0.5)
+#' FuncDGP(dgptype = 1, rndflag = 1, n = 200, g = 4, pi = c(0.5,0.5,0.5,0.5))
+#' FuncDGP(dgptype = 1, rndflag = 2, n = 200, g = 4, pi = c(0.5,0.5,0.5,0.5))
+#' FuncDGP(dgptype = 1, rndflag = 3, n = 200, g = 4, pi = c(0.5,0.5,0.5,0.5))
+#' FuncDGP(dgptype = 1, rndflag = 4, n = 200, g = 4, pi = c(0.5,0.5,0.5,0.5))
 #'
-#' FuncDGP(dgptype = 2, rndflag = 1, n = 200, g = 4, pi = 0.5)
-#' FuncDGP(dgptype = 2, rndflag = 2, n = 200, g = 4, pi = 0.5)
-#' FuncDGP(dgptype = 2, rndflag = 3, n = 200, g = 4, pi = 0.5)
-#' FuncDGP(dgptype = 2, rndflag = 4, n = 200, g = 4, pi = 0.5)
+#' FuncDGP(dgptype = 2, rndflag = 1, n = 200, g = 4, pi = c(0.5,0.5,0.5,0.5))
+#' FuncDGP(dgptype = 2, rndflag = 2, n = 200, g = 4, pi = c(0.5,0.5,0.5,0.5))
+#' FuncDGP(dgptype = 2, rndflag = 3, n = 200, g = 4, pi = c(0.5,0.5,0.5,0.5))
+#' FuncDGP(dgptype = 2, rndflag = 4, n = 200, g = 4, pi = c(0.5,0.5,0.5,0.5))
 #'
-#' FuncDGP(dgptype = 3, rndflag = 1, n = 200, g = 4, pi = 0.5)
-#' FuncDGP(dgptype = 3, rndflag = 2, n = 200, g = 4, pi = 0.5)
-#' FuncDGP(dgptype = 3, rndflag = 3, n = 200, g = 4, pi = 0.5)
-#' FuncDGP(dgptype = 3, rndflag = 4, n = 200, g = 4, pi = 0.5)
+#' FuncDGP(dgptype = 3, rndflag = 1, n = 200, g = 4, pi = c(0.5,0.5,0.5,0.5))
+#' FuncDGP(dgptype = 3, rndflag = 2, n = 200, g = 4, pi = c(0.5,0.5,0.5,0.5))
+#' FuncDGP(dgptype = 3, rndflag = 3, n = 200, g = 4, pi = c(0.5,0.5,0.5,0.5))
+#' FuncDGP(dgptype = 3, rndflag = 4, n = 200, g = 4, pi = c(0.5,0.5,0.5,0.5))
 
 FuncDGP <- function(dgptype, rndflag, n, g, pi) {
   if(dgptype == 1) {
@@ -56,7 +56,7 @@ FuncDGP <- function(dgptype, rndflag, n, g, pi) {
   } else if (dgptype == 2) {
     Z <- 4*(rand(n,1) - 0.5)
     grid <- seq(from = -2, to = 2, by = 4/g)
-    X <- cbind((rand(n,1)-0.5)*4, rand(n,1))
+    X <- cbind((rand(n,1)-0.5)*4, randn(n,1))
 
     S <- matrix(rowSums(repmat(Z,1,g)<repmat(grid[2:length(grid)],n,1)))
     A <- CovAdptRnd(rndflag = rndflag, S = S, pi = pi)
@@ -66,7 +66,7 @@ FuncDGP <- function(dgptype, rndflag, n, g, pi) {
     Y1 <- 2 - 0.8*X[,2]*X[,1] + Z^2 + Z*X[,1] + Err[,1]
     Y0 <- 1 - 0.8*X[,2]*X[,1] + Z^2 + Z*X[,1] + Err[,2]
     D0 <- -1 + 0.5*X[,1]^2 - 0.5*X[,2]^2 - 0.5*Z^2 > Err[,3]*3
-    D1 <- 1 + 0.5*X[,1]^2 - 0.5*X[,2] - 0.5*Z^2 > Err[,4]*3
+    D1 <- 1 + 0.5*X[,1]^2 - 0.5*X[,2]^2 - 0.5*Z^2 > Err[,4]*3
     D1[D0==1] <- 1
     D <- D1*A + D0*(1-A)
     Y <- Y1*D + Y0*(1-D)
@@ -93,7 +93,7 @@ FuncDGP <- function(dgptype, rndflag, n, g, pi) {
     Y0 <- 1 + Z + X %*% beta + Err[,2]
     D0 <- -1 + X %*% gamma - Z > Err[,3]*sqrt(7)
     D1 <- 2 + X %*% gamma - Z > Err[,4]*sqrt(7)
-    D1[D0==0] <- 1
+    D1[D0==1] <- 1
     D <- D1*A + D0*(1-A)
     Y <- Y1*D + Y0*(1-D)
 

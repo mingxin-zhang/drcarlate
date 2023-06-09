@@ -2,19 +2,19 @@
 % Please edit documentation in R/splinebasis.R
 \name{splinebasis}
 \alias{splinebasis}
-\title{Spline The Matrix}
+\title{For each column of an input matrix, elements which are less than the median of that column are set to 0, leaving the rest of the elements unchanged}
 \usage{
 splinebasis(X)
 }
 \arguments{
-\item{X}{The extra covariate, a nxK matrix. No constant included.}
+\item{X}{The extra covariates, a n x K matrix. No constant included.}
 }
 \value{
-H A nxK matrix whose each element is bigger than its column median.
+H A n x K matrix. All elements of the X that are less than
+the median of their corresponding columns are set to 0, leaving the rest unchanged.
 }
 \description{
-Splinebasis is based on Yubo's code.
-   It generates polynomial spline basis in Chen (2007) p 5571.
+For each column of an input matrix, elements which are less than the median of that column are set to 0, leaving the rest of the elements unchanged.
 }
 \examples{
 library(pracma)

@@ -20,22 +20,22 @@ LinearLogit(Y, D, A, X, S, s, modelflag, iridge)
 \item{s}{A particular stratum.}
 
 \item{modelflag}{Its value ranges from characters 1, 2, and 3, respectively declaring different estimation strategies.
-1-linear linear; 2-linear logistic; 3-high dimensional.}
+1-L; 2-NL; 3-R.}
 
 \item{iridge}{A scalar. The penalization parameter in ridge regression.}
 }
 \value{
 theta_0s, theta_1s, beta_0s, beta_1s are estimated coefficients vectors.
-   The dimension is Kx1 if modelflag = 1; (K+1)x1 if modelflag =2 or 3.
+   The dimension is Kx1 if modelflag = 1; (K+1)x1 if modelflag = 2 or 3.
 }
 \description{
 LinearLogit generates estimated pseudo true values for parametric models.
    Different estimation strategies are adopted according to different values of modelflag.
-   See Jiang et al.(2022) for more details about different strategies.
+   See Jiang et al. (2022) for more details about different strategies.
 }
 \examples{
 #' set.seed(1)
-DGP <- FuncDGP(dgptype = 3, rndflag = 1, n = 10000, g = 4, pi = 0.5)
+DGP <- FuncDGP(dgptype = 3, rndflag = 1, n = 10000, g = 4, pi = c(0.5, 0.5, 0.5, 0.5))
 X <- DGP$X
 Y <- DGP$Y
 A <- DGP$A
@@ -48,5 +48,5 @@ LinearLogit(Y = Y, D = D, A = A, X = X, S = S, s = 4, modelflag = 3, iridge = 0.
 
 }
 \references{
-Jiang L, Linton O B, Tang H, et al. Improving estimation efficiency via regression-adjustment in covariate-adaptive randomizations with imperfect compliance [J]. 2022.
+Jiang L, Linton O B, Tang H, Zhang Y. Improving estimation efficiency via regression-adjustment in covariate-adaptive randomizations with imperfect compliance [J]. 2022.
 }

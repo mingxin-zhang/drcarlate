@@ -1,77 +1,79 @@
----
-title: "JTZ_data_simulation_example"
-output: rmarkdown::html_vignette
-vignette: >
-  %\VignetteIndexEntry{JTZ_data_simulation_example}
-  %\VignetteEngine{knitr::rmarkdown}
-  %\VignetteEncoding{UTF-8}
----
+#' Reproduce the results of the Jiang et al. (2022)
+#' @description  Helps the user reproduce the results of the data simulation section of Jiang et al. (2022).
+#' @param iMonte A scalar. Monte Carlo sizes.
+#' @param dgptype A scalar. The value can be string 1, 2, or 3,
+#'    respectively corresponding to the three random data generation methods in the paper (See Jiang et al. (2022) for DGP details).
+#' @param n Sample size.
+#' @param g Number of strata. We set g=4 in Jiang et al. (2022).
+#' @param pi Targeted assignment probability across strata.
+#' @param iPert A scalar. iPert = 0 means size. Otherwise means power: iPert is the perturbation of false null.
+#' @param iq A scalar. Size of hypothesis testing. The authors set iq = 0.05.
+#' @param iridge A scalar. The penalization parameter in ridge regression.
 
-```{r, include = FALSE}
-library(JTZ)
-library(pracma)
+#' @return A table summarizing the estimated results, mProd.
+#' @export
+#' @references Jiang L, Linton O B, Tang H, Zhang Y. Improving estimation efficiency via regression-adjustment in covariate-adaptive randomizations with imperfect compliance [J]. 2022.
+#' @examples
+#' # size, iPert = 0
+#' ATEJLTZ(iMonte = 10, dgptype = 1, n = 20, g = 4,
+#'     pi = c(0.5, 0.5, 0.5, 0.5), iPert = 0, iq = 0.05, iridge = 0.001)
+#'
+#' # power, iPert = 1
+#' JLTZ(iMonte = 10, dgptype = 1, n = 20, g = 4,
+#'     pi = c(0.5, 0.5, 0.5, 0.5), iPert = 1, iq = 0.05, iridge = 0.001)
 
-knitr::opts_chunk$set(
-  collapse = TRUE,
-  comment = "#>"
-)
-```
+JLTZ <- function(iMonte, dgptype, n, g, pi, iPert, iq = 0.05, iridge = 0.001) {
 
-**Authors**: Liang Jiang, Haihan Tang, Yichong Zhang
-
-**Date**: 20220807
-
-## Parameter specification
-```{r}
+# Start
 tic()
-set.seed(1)
-iMonte <- 1000  # Monte Carlo sizes
-dgptype <- 1 # 1,2,3 (see paper for details)
-n <- 200 # sample size
-g <- 4 # number of strata. we set g = 4 in the paper
-pi <-  0.5 # targeted assignment probability
-iPert <- 0 # scalar. iPert = 0 means size. Otherwise means power: iPert is the perturbation of false null
-iq <- 0.05 # size of hypothesis testing. We set iq = 0.05
-iridge <- 0.001 # scalar. The penalization parameter in ridge regression
-```
 
-## Simulate the LATE tau
-```{r}
+# Set random seed
+set.seed(1)
+
+# test the length of pi
+if (g != length(pi)){
+  stop("g not equal to length(pi)!")
+}
+
+# Simulate the LATE tau when set.seed(1)
+if (dgptype == 1) {
+  vtau <- c(0.9203193, 0.9211907, 0.9224011, 0.9216388) # DGP 1
+} else if (dgptype == 2) {
+  vtau <- c(0.9220499, 0.9216538, 0.9214587, 0.9214584) # DGP 2
+} else if (dgptype == 3) {
+  vtau <- c(0.9225413,  0.9215747, 0.9215092, 0.9221616) #DGP 3
+}
+
 # only run once
 #truevalue_result <- TrueValue(dgptype = dgptype, vIdx = 1:4, n = 10000, g = g, pi = pi)
 #tau <- truevalue_result[["tau"]]
 #print("Finish simulating true tau.")
 
-#True tau ! 
-vtau <- c(0.9213287, 0.9226964, 0.9213111, 0.9206209)
-```
-
-## Monte Carlo Experiment
-```{r, message=FALSE, warning=FALSE, results='hide', cache=TRUE}
+# Monte Carlo Experiment
 # If a value exists, cols are (1)NA (2)LP (3)LG (4)F (5)NP (6)lasso (7)2SLS (8)R
 # 1-SRS
-mtauhat_d1 <- NaN*ones(iMonte, 8)
-msighat_d1 <- NaN*ones(iMonte, 8)
-mstat_d1   <- NaN*ones(iMonte, 8)
-mdeci_d1   <- NaN*ones(iMonte, 8)
+mtauhat_d1 <- NaN*ones(iMonte, 12)
+msighat_d1 <- NaN*ones(iMonte, 12)
+mstat_d1   <- NaN*ones(iMonte, 12)
+mdeci_d1   <- NaN*ones(iMonte, 12)
 
 # 2-WEI
-mtauhat_d2 <- NaN*ones(iMonte, 8)
-msighat_d2 <- NaN*ones(iMonte, 8)
-mstat_d2   <- NaN*ones(iMonte, 8)
-mdeci_d2   <- NaN*ones(iMonte, 8)
+mtauhat_d2 <- NaN*ones(iMonte, 12)
+msighat_d2 <- NaN*ones(iMonte, 12)
+mstat_d2   <- NaN*ones(iMonte, 12)
+mdeci_d2   <- NaN*ones(iMonte, 12)
 
 # 3-BCD
-mtauhat_d3 <- NaN*ones(iMonte, 8)
-msighat_d3 <- NaN*ones(iMonte, 8)
-mstat_d3   <- NaN*ones(iMonte, 8)
-mdeci_d3   <- NaN*ones(iMonte, 8)
+mtauhat_d3 <- NaN*ones(iMonte, 12)
+msighat_d3 <- NaN*ones(iMonte, 12)
+mstat_d3   <- NaN*ones(iMonte, 12)
+mdeci_d3   <- NaN*ones(iMonte, 12)
 
 # 4-SBR
-mtauhat_d4 <- NaN*ones(iMonte, 8)
-msighat_d4 <- NaN*ones(iMonte, 8)
-mstat_d4   <- NaN*ones(iMonte, 8)
-mdeci_d4   <- NaN*ones(iMonte, 8)
+mtauhat_d4 <- NaN*ones(iMonte, 12)
+msighat_d4 <- NaN*ones(iMonte, 12)
+mstat_d4   <- NaN*ones(iMonte, 12)
+mdeci_d4   <- NaN*ones(iMonte, 12)
 
 
 for (i in 1:iMonte) {
@@ -143,17 +145,18 @@ for (i in 1:iMonte) {
   mstat_d4[i,]   <- vstat_d4
   mdeci_d4[i,]   <- vdeci_d4
 }
-```
 
-## Evaluation
-```{r}
-vProb_d1 <- colMeans(mdeci_d1, na.rm = TRUE) # 1x8. size or power depending on the context.
+# evaluation
+vProb_d1 <- colMeans(mdeci_d1, na.rm = TRUE) # 1x12. size or power depending on the context.
 vProb_d2 <- colMeans(mdeci_d2, na.rm = TRUE)
 vProb_d3 <- colMeans(mdeci_d3, na.rm = TRUE)
 vProb_d4 <- colMeans(mdeci_d4, na.rm = TRUE)
 mProd <- t(rbind(vProb_d1,vProb_d2,vProb_d3,vProb_d4))
 
-mProd
+return(mProd)
 
 toc()
-```
+}
+
+
+

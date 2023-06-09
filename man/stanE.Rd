@@ -2,37 +2,39 @@
 % Please edit documentation in R/stanE.R
 \name{stanE}
 \alias{stanE}
-\title{Compute Estimated Sigma}
+\title{Compute the Estimated Standard Error of the Input Estimator}
 \usage{
-stanE(muY1, muY0, muD1, muD0, A, S, Y, D, tauhat)
+stanE(muY1, muY0, muD1, muD0, A, S, Y, D, tauhat, stratnum = NULL)
 }
 \arguments{
-\item{muY1}{A nx1 vector of hat\{mu\}^Y(A=1)s}
+\item{muY1}{A nx1 vector of hat\{mu\}^Y(A=1)s.}
 
-\item{muY0}{A nx1 vector of hat\{mu\}^Y(A=0)s}
+\item{muY0}{A nx1 vector of hat\{mu\}^Y(A=0)s.}
 
-\item{muD1}{A nx1 vector of hat\{mu\}^D(A=1)s}
+\item{muD1}{A nx1 vector of hat\{mu\}^D(A=1)s.}
 
-\item{muD0}{A nx1 vector of hat\{mu\}^D(A=0)s}
+\item{muD0}{A nx1 vector of hat\{mu\}^D(A=0)s.}
 
-\item{A}{A nx1 vector.}
+\item{A}{A nx1 vector. Each of its elements is the treatment assignment of the corresponding observation.}
 
-\item{S}{A nx1 vector.}
+\item{S}{A nx1 vector. Each of its elements is the stratum of corresponding observation.}
 
-\item{Y}{A nx1 vector.}
+\item{Y}{A nx1 vector. Each of its elements is the observed outcome of interest of corresponding observation.}
 
-\item{D}{A nx1 vector.}
+\item{D}{A nx1 vector. Each of its elements is is a binary random variable indicating whether the individual i received treatment (Di = 1) or not (Di = 0) in the actual study.}
 
-\item{tauhat}{A scalar; LATE estimate}
+\item{tauhat}{A scalar. LATE estimate.}
+
+\item{stratnum}{A scalar. Number of stratum.}
 }
 \value{
-The estimated sigma in Jiang et al.(2022); scalar.
+A scalar. The estimated standard deviation in Jiang et al. (2022).
 }
 \description{
-stanE_v1 computes hat\{sigma\} in Jiang et al.(2022).
+stanE Computes the estimated standard error of the input estimator.
 }
 \examples{
-DGP <- FuncDGP(dgptype = 1, rndflag = 1, n = 200, g = 4, pi = 0.5)
+DGP <- FuncDGP(dgptype = 1, rndflag = 1, n = 200, g = 4, pi = c(0.5,0.5,0.5,0.5))
 muY1 <- DGP[["Y1"]]
 muY0 <- DGP[["Y0"]]
 muD1 <- DGP[["D1"]]
@@ -46,5 +48,5 @@ stanE(muY1, muY0, muD1, muD0, A, S, Y, D, tauhat)
 
 }
 \references{
-Jiang L, Linton O B, Tang H, et al. Improving estimation efficiency via regression-adjustment in covariate-adaptive randomizations with imperfect compliance [J]. 2022.
+Jiang L, Linton O B, Tang H, Zhang Y. Improving estimation efficiency via regression-adjustment in covariate-adaptive randomizations with imperfect compliance [J]. 2022.
 }

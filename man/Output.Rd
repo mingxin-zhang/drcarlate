@@ -7,44 +7,44 @@
 Output(ii, tau, dgptype, rndflag, n, g, pi, iPert, iq, iridge)
 }
 \arguments{
-\item{ii}{Monte carlo index.}
+\item{ii}{Monte Carlo index.}
 
 \item{tau}{A scalar. The simulated true LATE effect.}
 
-\item{dgptype}{A Scalar. 1, 2, 3 (See Jiang et al.(2022) for DGP details).}
+\item{dgptype}{A Scalar. 1, 2, 3 (See Jiang et al. (2022) for DGP details).}
 
-\item{rndflag}{Method of CAR(covariate-adaptive randomizations).
+\item{rndflag}{Method of CAR (covariate-adaptive randomizations).
 Its value can be 1, 2, 3 or4. 1-SRS; 2-WEI; 3-BCD; 4-SBR.
-See Jiang et al.(2022) for more details about CAR.}
+See Jiang et al. (2022) for more details about CAR.}
 
 \item{n}{Sample size.}
 
-\item{g}{Number of strata. We set g=4 in Jiang et al.(2022).}
+\item{g}{Number of strata. The authors set g=4 in Jiang et al. (2022).}
 
-\item{pi}{Targeted assignment probability.}
+\item{pi}{Targeted assignment probability across strata.}
 
 \item{iPert}{A scalar. iPert =0 means size. Otherwise means power: iPert is the perturbation of false null.}
 
-\item{iq}{Size of hypothesis testing. We set iq = 0.05.}
+\item{iq}{Size of hypothesis testing. The authors set iq = 0.05 in Jiang et al. (2022).}
 
 \item{iridge}{A scalar. The penalization parameter in ridge regression.}
 }
 \value{
 A list containing four matrices named vtauhat, vsighat, vstat and vdeci respectively.
-   vtauhat is a 1x8 vector: (1) NA (2) LP (3) LG (4) F (5) NP (6) lasso (7) 2SLS (8) NP+lasso.
+   vtauhat is a 1x8 vector: (1) NA (2) LP (3) LG (4) F (5) NP (6) R (when dgp = 3) (7) 2SLS (8) R (when dgp = 1 or 2).
    vsighat is a 1x8 vector: unscaled standard errors for vtauhat.
    vstat is a 1x8 vector: test statistic.
    vdeci is a 1x8 logical vector: if applicable, 1 means rejecting the null. 0 means not rejecting the null.
 }
 \description{
-Output is an integrated function that computes all the estimates used in Jiang et al.(2022).
+Output is an integrated function that computes all the estimates (including NA, TSLS, L, NL, F, NP, R) used in Jiang et al. (2022).
    See the paper for more details.
 }
 \examples{
 Output(ii = 1, tau = 0.9122762, dgptype = 1,
-       rndflag = 4, n = 2000, g = 4, pi = 0.5,
+       rndflag = 4, n = 2000, g = 4, pi = c(0.5,0.5,0.5,0.5),
        iPert = 1, iq = 0.05, iridge = 0.001)
 }
 \references{
-Jiang L, Linton O B, Tang H, et al. Improving estimation efficiency via regression-adjustment in covariate-adaptive randomizations with imperfect compliance [J]. 2022.#'
+Jiang L, Linton O B, Tang H, Zhang Y. Improving estimation efficiency via regression-adjustment in covariate-adaptive randomizations with imperfect compliance [J]. 2022.
 }

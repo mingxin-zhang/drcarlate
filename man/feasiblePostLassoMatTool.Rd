@@ -34,11 +34,11 @@ feasiblePostLassoMatTool(
 
 \item{link}{Link can be identity or logit.
 This determines the method used for regression with the selected write variable after lasso.
-See Jiang et al.(2022) for more details.}
+See Jiang et al. (2022) for more details.}
 
 \item{glmTol}{Maximum tolerance in GLM. The default value is 1e-8.}
 
-\item{initScale}{Initail scale, the default value is 0.5.}
+\item{initScale}{Initial scale, the default value is 0.5.}
 }
 \value{
 A kx1 cector, the coefficients b.
@@ -48,12 +48,12 @@ Under the condition of high dimensional data,
    the function first selects covariables through lasso regression,
    then performs logit regression or linear regression according to the caller's requirements,
    and finally returns the adjusted Lasso regression coefficient vector.
-   Note that HH tweaks a bit to accommodate D perfect separation.
+   This function has been slightly adapted for this package.
 }
 \examples{
 set.seed(1)
 # Notice that when we set dgptype = 3, FuncDGP will generate a high dimensional data for us.
-DGP <- FuncDGP(dgptype = 3, rndflag = 1, n = 10000, g = 4, pi = 0.5)
+DGP <- FuncDGP(dgptype = 3, rndflag = 1, n = 10000, g = 4, pi = c(0.5, 0.5, 0.5, 0.5))
 X <- DGP$X
 Y <- DGP$Y
 A <- DGP$A
@@ -63,4 +63,7 @@ feasiblePostLassoMatTool(x = X[S==1 & A==0,], y = Y[S==1 & A==0,])
 feasiblePostLassoMatTool(x = X[S==1 & A==0,], y = D[S==1 & A==0,], link = "logit")
 
 
+}
+\references{
+Belloni, A., Chernozhukov, V., Fernández-Val, I. and Hansen, C. (2017), Program Evaluation and Causal Inference With High-Dimensional Data. Econometrica, 85: 233-298. https://doi.org/10.3982/ECTA12723
 }

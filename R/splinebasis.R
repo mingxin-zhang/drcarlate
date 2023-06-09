@@ -1,9 +1,9 @@
-#' @title Spline The Matrix
+#' @title For each column of an input matrix, elements which are less than the median of that column are set to 0, leaving the rest of the elements unchanged
 #' @description
-#'    Splinebasis is based on Yubo's code.
-#'    It generates polynomial spline basis in Chen (2007) p 5571.
-#' @param X The extra covariate, a nxK matrix. No constant included.
-#' @return H A nxK matrix whose each element is bigger than its column median.
+#'    For each column of an input matrix, elements which are less than the median of that column are set to 0, leaving the rest of the elements unchanged.
+#' @param X The extra covariates, a n x K matrix. No constant included.
+#' @return H A n x K matrix. All elements of the X that are less than
+#' the median of their corresponding columns are set to 0, leaving the rest unchanged.
 #' @export
 #'
 #' @examples

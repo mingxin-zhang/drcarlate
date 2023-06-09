@@ -14,8 +14,7 @@ y A nx1 matrix.
   y equals to exp(x)/(1+exp(x)) if y is not NA and 0 else.
 }
 \description{
-Regression-adjusted Estimation of Quantile Treatment Effects under
-  Covariate-Adaptive Randomizations.
+Logestic CDF(cumulative distribution function).
 }
 \examples{
 x <- pracma::rand(5,1)

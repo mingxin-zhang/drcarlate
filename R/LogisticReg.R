@@ -1,7 +1,6 @@
 #' @title  Logistic Regression Function
 #'
-#' @description  Regression-adjusted Estimation of Quantile Treatment Effects under
-#'   Covariate-Adaptive Randomizations.
+#' @description  Logestic CDF(cumulative distribution function).
 #'
 #' @usage LogisticReg(x)
 #'
