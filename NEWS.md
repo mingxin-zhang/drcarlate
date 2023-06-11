@@ -4,5 +4,6 @@
 # drcarlate 1.1.0
 * Fixed some issues existed in the previous version.
 
-
+# drcarlate 1.2.0
+* Replace the `print()` with `message()`  or `stop()` in all functions. 
 

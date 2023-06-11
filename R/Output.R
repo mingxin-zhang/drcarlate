@@ -297,7 +297,7 @@ Output <- function(ii, tau, dgptype, rndflag, n, g, pi, iPert, iq, iridge) {
   ########################
   # Monte Carlo Tracking
   ########################
-  print(str_c("Currently at ", ii, " th sample!"))
+  message(str_c("Currently at ", ii, " th sample!"))
 
   #return results
   output_result <- list(vtauhat = vtauhat, vsighat = vsighat,

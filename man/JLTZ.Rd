@@ -33,13 +33,15 @@ A table summarizing the estimated results, mProd.
 Helps the user reproduce the results of the data simulation section of Jiang et al. (2022).
 }
 \examples{
+\donttest{
 # size, iPert = 0
-ATEJLTZ(iMonte = 10, dgptype = 1, n = 20, g = 4,
+JLTZ(iMonte = 10, dgptype = 1, n = 200, g = 4,
     pi = c(0.5, 0.5, 0.5, 0.5), iPert = 0, iq = 0.05, iridge = 0.001, seed = 1)
 
 # power, iPert = 1
-JLTZ(iMonte = 10, dgptype = 1, n = 20, g = 4,
+JLTZ(iMonte = 10, dgptype = 1, n = 200, g = 4,
     pi = c(0.5, 0.5, 0.5, 0.5), iPert = 1, iq = 0.05, iridge = 0.001, seed = 1)
+}
 }
 \references{
 Jiang L, Linton O B, Tang H, Zhang Y. Improving estimation efficiency via regression-adjustment in covariate-adaptive randomizations with imperfect compliance [J]. 2022.

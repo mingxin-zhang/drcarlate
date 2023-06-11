@@ -196,7 +196,7 @@ ATEOutput <- function(ii, tau, dgptype, rndflag,
   ########################
   # Monte Carlo Tracking
   ########################
-  print(str_c("Currently at ", ii, " th sample!"))
+  message(str_c("Currently at ", ii, " th sample!"))
 
   ########################
   # Return Results

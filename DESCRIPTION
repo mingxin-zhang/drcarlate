@@ -1,7 +1,7 @@
 Package: drcarlate
 Type: Package
 Title: Improving Estimation Efficiency in CAR with Imperfect Compliance
-Version: 1.1.0
+Version: 1.2.0
 Authors@R: 
     c(person(given = "Liang",
              family = "Jiang",

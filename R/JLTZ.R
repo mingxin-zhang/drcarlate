@@ -15,13 +15,15 @@
 #' @export
 #' @references Jiang L, Linton O B, Tang H, Zhang Y. Improving estimation efficiency via regression-adjustment in covariate-adaptive randomizations with imperfect compliance [J]. 2022.
 #' @examples
+#' \donttest{
 #' # size, iPert = 0
-#' ATEJLTZ(iMonte = 10, dgptype = 1, n = 20, g = 4,
+#' JLTZ(iMonte = 10, dgptype = 1, n = 200, g = 4,
 #'     pi = c(0.5, 0.5, 0.5, 0.5), iPert = 0, iq = 0.05, iridge = 0.001, seed = 1)
 #'
 #' # power, iPert = 1
-#' JLTZ(iMonte = 10, dgptype = 1, n = 20, g = 4,
+#' JLTZ(iMonte = 10, dgptype = 1, n = 200, g = 4,
 #'     pi = c(0.5, 0.5, 0.5, 0.5), iPert = 1, iq = 0.05, iridge = 0.001, seed = 1)
+#' }
 
 JLTZ <- function(iMonte, dgptype, n, g, pi, iPert, iq = 0.05, iridge = 0.001, seed = 1) {
 
@@ -48,7 +50,7 @@ if (seed == 1) {
 } else {
   truevalue_result <- TrueValue(dgptype = dgptype, vIdx = 1:4, n = 10000, g = g, pi = pi)
   tau <- truevalue_result[["tau"]]
-  print("Finish simulating true tau.")
+  message("Finish simulating true tau.")
 
 }
 
@@ -80,7 +82,7 @@ mdeci_d4   <- NaN*ones(iMonte, 12)
 
 
 for (i in 1:iMonte) {
-  print("1-SRS")
+  message("1-SRS")
   # 1-SRS
   result_srs <- tryCatch({Output(ii = i, tau = vtau[1], dgptype = dgptype, rndflag = 1,
                   n = n, g = g, pi = pi, iPert = iPert, iq = iq, iridge = iridge)},
@@ -98,7 +100,7 @@ for (i in 1:iMonte) {
   mdeci_d1[i,]   <- vdeci_d1
 
   # 2-WEI
-  print("2-WEI")
+  message("2-WEI")
   result_wei <- tryCatch({Output(ii = i, tau = vtau[2], dgptype = dgptype, rndflag = 2,
                   n = n, g = g, pi = pi, iPert = iPert, iq = iq, iridge = iridge)},
            error = function(e) {list(vtauhat = NA, vsighat = NA,
@@ -114,7 +116,7 @@ for (i in 1:iMonte) {
   mdeci_d2[i,]   <- vdeci_d2
 
   # 3-BCD
-  print("3-BCD")
+  message("3-BCD")
   result_bcd <- tryCatch({Output(ii = i, tau = vtau[3], dgptype = dgptype, rndflag = 3,
                   n = n, g = g, pi = pi, iPert = iPert, iq = iq, iridge = iridge)},
            error = function(e) {list(vtauhat = NA, vsighat = NA,
@@ -132,7 +134,7 @@ for (i in 1:iMonte) {
   mdeci_d3[i,]   <- vdeci_d3
 
   # 4-SBR
-  print("4-SBR")
+  message("4-SBR")
   result_sbr <- tryCatch({Output(ii = i, tau = vtau[4], dgptype = dgptype, rndflag = 4,
                   n = n, g = g, pi = pi, iPert = iPert, iq = iq, iridge = iridge)},
            error = function(e) {list(vtauhat = NA, vsighat = NA,

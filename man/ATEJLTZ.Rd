@@ -33,13 +33,15 @@ A table summarizing the estimated results, mProd.
 ATEJLTZ is the version of JLTZ under full compliance.
 }
 \examples{
+\donttest{
 # size, iPert = 0
-ATEJLTZ(iMonte = 10, dgptype = 1, n = 20, g = 4,
+ATEJLTZ(iMonte = 10, dgptype = 1, n = 200, g = 4,
     pi = c(0.5, 0.5, 0.5, 0.5), iPert = 0, iq = 0.05, iridge = 0.001)
 
 # power, iPert = 1
-ATEJLTZ(iMonte = 10, dgptype = 1, n = 20, g = 4,
+ATEJLTZ(iMonte = 10, dgptype = 1, n = 200, g = 4,
     pi = c(0.5, 0.5, 0.5, 0.5), iPert = 1, iq = 0.05, iridge = 0.001)
+    }
 }
 \references{
 Jiang L, Linton O B, Tang H, Zhang Y. Improving estimation efficiency via regression-adjustment in covariate-adaptive randomizations with imperfect compliance [J]. 2022.

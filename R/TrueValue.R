@@ -47,7 +47,7 @@ TrueValue <- function(dgptype, vIdx, n, g, pi) {
       mNT[sim,r] <<- length(vTmp2[D1==0 & D0==0])/n
       mCom[sim,r] <<- length(vTmp2[D1==1 & D0==0])/n
     }
-    print(str_c('currently at ' ,sim, 'th sample for simulating true value'))
+    message(str_c('currently at ' ,sim, 'th sample for simulating true value'))
   }
 
   map2(.x = 1:Nsim, .y = R, .f = TrueValue_component)

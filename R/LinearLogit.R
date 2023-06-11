@@ -89,15 +89,15 @@ LinearLogit <- function(Y, D, A, X, S, s, modelflag, iridge) {
   } else if (modelflag == 2) {
 
     # test
-    #print(min(eig(t(X[S==s & A==0,]) %*% X[S==s & A==0,])))
-    #print(min(eig(t(X[S==s & A==0,]) %*% X[S==s & A==0,])))
-    #print("==========================================================")
-    #print(s)
-    #print(size(X))
-    #print(data.frame(S=S, A=A) %>%  group_by(S,A) %>% summarise(n=n()))
-    #print(X[S==s & A==0,])
-    #print(X[S==s & A==1,])
-    #print("===========================================================")
+    #message(min(eig(t(X[S==s & A==0,]) %*% X[S==s & A==0,])))
+    #message(min(eig(t(X[S==s & A==0,]) %*% X[S==s & A==0,])))
+    #message("==========================================================")
+    #message(s)
+    #message(size(X))
+    #message(data.frame(S=S, A=A) %>%  group_by(S,A) %>% summarise(n=n()))
+    #message(X[S==s & A==0,])
+    #message(X[S==s & A==1,])
+    #message("===========================================================")
     # end
 
 
@@ -208,7 +208,7 @@ LinearLogit <- function(Y, D, A, X, S, s, modelflag, iridge) {
     return(result_list)
 
   } else {
-    print("Modelflag can take only 1, 2, 3!")
+    stop("Modelflag can take only 1, 2, 3!")
   }
 }
 

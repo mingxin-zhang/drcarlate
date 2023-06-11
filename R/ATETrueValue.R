@@ -35,7 +35,7 @@ ATETrueValue <- function(dgptype, vIdx, n, g, pi) {
       Tau[sim, r] <<- mean(Y1 - Y0)
 
           }
-    print(str_c('currently at ' ,sim, 'th sample for simulating true value'))
+    message(str_c('currently at ' ,sim, 'th sample for simulating true value'))
   }
 
   map2(.x = 1:Nsim, .y = R, .f = ATETrueValue_component)

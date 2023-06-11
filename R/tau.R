@@ -35,10 +35,10 @@ tau <- function(muY1, muY0, muD1, muD0, A, S, Y, D, stratnum = NULL) {
   tauhat <- iNu/iDe
 
   if (is.nan(tauhat)) {
-#    print("iNu:")
-#    print(iNu)
-#    print("iDe:")
-#    print(iDe)
+#    message("iNu:")
+#    message(iNu)
+#    message("iDe:")
+#    message(iDe)
     stop("Error: tauhat==NaN")
 #    return(list(muY1 = muY1,
 #                muY0 = muY0,
