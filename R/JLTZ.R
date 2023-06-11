@@ -9,6 +9,7 @@
 #' @param iPert A scalar. iPert = 0 means size. Otherwise means power: iPert is the perturbation of false null.
 #' @param iq A scalar. Size of hypothesis testing. The authors set iq = 0.05.
 #' @param iridge A scalar. The penalization parameter in ridge regression.
+#' @param seed A scalar. The random seed, the authors set seed = 1 in Jiang et al. (2022).
 
 #' @return A table summarizing the estimated results, mProd.
 #' @export
@@ -16,38 +17,40 @@
 #' @examples
 #' # size, iPert = 0
 #' ATEJLTZ(iMonte = 10, dgptype = 1, n = 20, g = 4,
-#'     pi = c(0.5, 0.5, 0.5, 0.5), iPert = 0, iq = 0.05, iridge = 0.001)
+#'     pi = c(0.5, 0.5, 0.5, 0.5), iPert = 0, iq = 0.05, iridge = 0.001, seed = 1)
 #'
 #' # power, iPert = 1
 #' JLTZ(iMonte = 10, dgptype = 1, n = 20, g = 4,
-#'     pi = c(0.5, 0.5, 0.5, 0.5), iPert = 1, iq = 0.05, iridge = 0.001)
+#'     pi = c(0.5, 0.5, 0.5, 0.5), iPert = 1, iq = 0.05, iridge = 0.001, seed = 1)
 
-JLTZ <- function(iMonte, dgptype, n, g, pi, iPert, iq = 0.05, iridge = 0.001) {
+JLTZ <- function(iMonte, dgptype, n, g, pi, iPert, iq = 0.05, iridge = 0.001, seed = 1) {
 
 # Start
 tic()
 
 # Set random seed
-set.seed(1)
+set.seed(seed)
 
 # test the length of pi
 if (g != length(pi)){
   stop("g not equal to length(pi)!")
 }
 
-# Simulate the LATE tau when set.seed(1)
-if (dgptype == 1) {
-  vtau <- c(0.9203193, 0.9211907, 0.9224011, 0.9216388) # DGP 1
-} else if (dgptype == 2) {
-  vtau <- c(0.9220499, 0.9216538, 0.9214587, 0.9214584) # DGP 2
-} else if (dgptype == 3) {
-  vtau <- c(0.9225413,  0.9215747, 0.9215092, 0.9221616) #DGP 3
-}
+if (seed == 1) {
+  # Simulate the LATE tau when set.seed(1)
+  if (dgptype == 1) {
+    vtau <- c(0.9203193, 0.9211907, 0.9224011, 0.9216388) # DGP 1
+  } else if (dgptype == 2) {
+    vtau <- c(0.9220499, 0.9216538, 0.9214587, 0.9214584) # DGP 2
+  } else if (dgptype == 3) {
+    vtau <- c(0.9225413,  0.9215747, 0.9215092, 0.9221616) #DGP 3
+  }
+} else {
+  truevalue_result <- TrueValue(dgptype = dgptype, vIdx = 1:4, n = 10000, g = g, pi = pi)
+  tau <- truevalue_result[["tau"]]
+  print("Finish simulating true tau.")
 
-# only run once
-#truevalue_result <- TrueValue(dgptype = dgptype, vIdx = 1:4, n = 10000, g = g, pi = pi)
-#tau <- truevalue_result[["tau"]]
-#print("Finish simulating true tau.")
+}
 
 # Monte Carlo Experiment
 # If a value exists, cols are (1)NA (2)LP (3)LG (4)F (5)NP (6)lasso (7)2SLS (8)R

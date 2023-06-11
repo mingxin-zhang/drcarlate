@@ -10,7 +10,7 @@
 #' @param iPert A scalar. iPert = 0 means size. Otherwise means power: iPert is the perturbation of false null.
 #' @param iq A scalar. Size of hypothesis testing. The authors set iq = 0.05 in Jiang et al. (2022).
 #' @param iridge A scalar. The penalization parameter in ridge regression.
-#'
+#' @param seed  A scalar. The random seed, the authors set seed = 1 in Jiang et al. (2022).
 #' @import pracma
 #' @importFrom MASS mvrnorm
 #' @importFrom stringr str_c str_detect
@@ -30,31 +30,32 @@
 
 
 
-ATEJLTZ <- function(iMonte, dgptype, n, g, pi, iPert, iq = 0.05, iridge = 0.001) {
+ATEJLTZ <- function(iMonte, dgptype, n, g, pi, iPert, iq = 0.05, iridge = 0.001, seed = 1) {
   # Start
   tic()
 
   # Set random seed
-  set.seed(1)
+  set.seed(seed)
 
   # test the length of pi
   if (g != length(pi)){
     stop("g not equal to length(pi)!")
   }
 
-  # Simulate the LATE tau when setseed(1)
-  if (dgptype == 1) {
-    vtau <- c(0.9991561, 0.9995641, 1.0001006, 0.9996593) # DGP 1
-  } else if (dgptype == 2) {
-    vtau <- c(1.0002081, 0.9993604, 1.0001609, 1.0001060) # DGP 2
-  } else if (dgptype == 3) {
-    vtau <- c(1.000145,  1.000057, 1.000299, 1.000392) #DGP 3
+  if (seed == 1) {
+    # Simulate the LATE tau when setseed(1)
+    if (dgptype == 1) {
+      vtau <- c(0.9991561, 0.9995641, 1.0001006, 0.9996593) # DGP 1
+    } else if (dgptype == 2) {
+      vtau <- c(1.0002081, 0.9993604, 1.0001609, 1.0001060) # DGP 2
+    } else if (dgptype == 3) {
+      vtau <- c(1.000145,  1.000057, 1.000299, 1.000392) #DGP 3
+    }
+  } else {
+    truevalue_result <- ATETrueValue(dgptype = dgptype, vIdx = 1:4, n = 10000, g = g, pi = pi)
+    tau <- truevalue_result[["tau"]]
+    print("Finish simulating true tau.")
   }
-
-  # only run once
-  #truevalue_result <- ATETrueValue(dgptype = dgptype, vIdx = 1:4, n = 10000, g = g, pi = pi)
-  #tau <- truevalue_result[["tau"]]
-  #print("Finish simulating true tau.")
 
   # Monte Carlo Experiment
   # If a value exists, cols are (1)NA (2)LP (3)LG (4)F (5)NP (6)lasso (7)2SLS (8)R

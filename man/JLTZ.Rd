@@ -4,7 +4,7 @@
 \alias{JLTZ}
 \title{Reproduce the results of the Jiang et al. (2022)}
 \usage{
-JLTZ(iMonte, dgptype, n, g, pi, iPert, iq = 0.05, iridge = 0.001)
+JLTZ(iMonte, dgptype, n, g, pi, iPert, iq = 0.05, iridge = 0.001, seed = 1)
 }
 \arguments{
 \item{iMonte}{A scalar. Monte Carlo sizes.}
@@ -23,6 +23,8 @@ respectively corresponding to the three random data generation methods in the pa
 \item{iq}{A scalar. Size of hypothesis testing. The authors set iq = 0.05.}
 
 \item{iridge}{A scalar. The penalization parameter in ridge regression.}
+
+\item{seed}{A scalar. The random seed, the authors set seed = 1 in Jiang et al. (2022).}
 }
 \value{
 A table summarizing the estimated results, mProd.
@@ -33,11 +35,11 @@ Helps the user reproduce the results of the data simulation section of Jiang et 
 \examples{
 # size, iPert = 0
 ATEJLTZ(iMonte = 10, dgptype = 1, n = 20, g = 4,
-    pi = c(0.5, 0.5, 0.5, 0.5), iPert = 0, iq = 0.05, iridge = 0.001)
+    pi = c(0.5, 0.5, 0.5, 0.5), iPert = 0, iq = 0.05, iridge = 0.001, seed = 1)
 
 # power, iPert = 1
 JLTZ(iMonte = 10, dgptype = 1, n = 20, g = 4,
-    pi = c(0.5, 0.5, 0.5, 0.5), iPert = 1, iq = 0.05, iridge = 0.001)
+    pi = c(0.5, 0.5, 0.5, 0.5), iPert = 1, iq = 0.05, iridge = 0.001, seed = 1)
 }
 \references{
 Jiang L, Linton O B, Tang H, Zhang Y. Improving estimation efficiency via regression-adjustment in covariate-adaptive randomizations with imperfect compliance [J]. 2022.

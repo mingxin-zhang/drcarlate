@@ -14,9 +14,11 @@
 #' @export
 #' @references Jiang L, Linton O B, Tang H, Zhang Y. Improving estimation efficiency via regression-adjustment in covariate-adaptive randomizations with imperfect compliance [J]. 2022.
 #' @examples
-#' # ATETrueValue(dgptype = 1, vIdx = c(1,2,3,4), n = 100, g = 4, pi = c(0.5,0.5,0.5,0.5))
-#' # ATETrueValue(dgptype = 2, vIdx = c(1,2,3,4), n = 100, g = 4, pi = c(0.5,0.5,0.5,0.5))
-#' # ATETrueValue(dgptype = 3, vIdx = c(1,2,3,4), n = 100, g = 4, pi = c(0.5,0.5,0.5,0.5))
+#' \donttest{
+#'  ATETrueValue(dgptype = 1, vIdx = c(1,2,3,4), n = 100, g = 4, pi = c(0.5,0.5,0.5,0.5))
+#'  ATETrueValue(dgptype = 2, vIdx = c(1,2,3,4), n = 100, g = 4, pi = c(0.5,0.5,0.5,0.5))
+#'  ATETrueValue(dgptype = 3, vIdx = c(1,2,3,4), n = 100, g = 4, pi = c(0.5,0.5,0.5,0.5))
+#'  }
 
 
 ATETrueValue <- function(dgptype, vIdx, n, g, pi) {

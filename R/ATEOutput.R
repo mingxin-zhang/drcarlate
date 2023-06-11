@@ -22,9 +22,10 @@
 #' @export
 #'
 #' @examples
-#' # ATEOutput(ii = 1, tau = 0.9122762, dgptype = 1,
-#' #        rndflag = 4, n = 2000, g = 4, pi = c(0.5,0.5,0.5,0.5),
-#' #        iPert = 1, iq = 0.05, iridge = 0.001)
+#' \donttest{ATEOutput(ii = 1, tau = 0.9122762, dgptype = 1,
+#'         rndflag = 4, n = 2000, g = 4, pi = c(0.5,0.5,0.5,0.5),
+#'         iPert = 1, iq = 0.05, iridge = 0.001)
+#'         }
 #'
 ATEOutput <- function(ii, tau, dgptype, rndflag,
                       n, g, pi, iPert, iq, iridge) {
