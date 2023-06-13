@@ -9,7 +9,7 @@
 #' @param Y A nx1 vector. Each of its elements is the observed outcome of interest of corresponding observation.
 #' @param D A nx1 vector. Each of its elements is is a binary random variable indicating whether the individual i received treatment (Di = 1) or not (Di = 0) in the actual study.
 #' @param tauhat A scalar. LATE estimate.
-#' @param stratnum A scalar. Number of stratum.
+#' @param stratum A vector about the unique value for stratum, the length is unique(S),the default value is NULL.
 
 #'
 #' @return A scalar. The estimated standard deviation in Jiang et al. (2022).
@@ -28,9 +28,9 @@
 #' tauhat <- tau(muY1, muY0, muD1, muD0, A, S, Y, D)
 #' stanE(muY1, muY0, muD1, muD0, A, S, Y, D, tauhat)
 #'
-stanE <- function(muY1, muY0, muD1, muD0, A, S, Y, D, tauhat, stratnum = NULL) {
+stanE <- function(muY1, muY0, muD1, muD0, A, S, Y, D, tauhat, stratum = NULL) {
   n <-  length(S)
-  vPihat <-  pihat(A = A, S = S, stratnum = stratnum)
+  vPihat <-  pihat(A = A, S = S, stratum = stratum)
   vXi_til_1 <-  ((1-1/vPihat)*muY1 - muY0 + Y/vPihat) -
     tauhat*((1-1/vPihat)*muD1 - muD0 + D/vPihat)
   vXi_til_0 <- ((1/(1-vPihat) - 1)*muY0 + muY1 - Y/(1-vPihat)) -
@@ -39,7 +39,7 @@ stanE <- function(muY1, muY0, muD1, muD0, A, S, Y, D, tauhat, stratnum = NULL) {
   vXi_hat_1 <- NaN*ones(n,1)
   vXi_hat_0 <- NaN*ones(n,1)
 
-  if (is.null(stratnum)) {
+  if (is.null(stratum)) {
     for (s in 1:max(S)) {
       vXi_hat_1[S==s] <- vXi_til_1[S==s] - mean(vXi_til_1[S==s & A==1])
       vXi_hat_0[S==s] <- vXi_til_0[S==s] - mean(vXi_til_0[S==s & A==0])
@@ -47,8 +47,8 @@ stanE <- function(muY1, muY0, muD1, muD0, A, S, Y, D, tauhat, stratnum = NULL) {
         mean(Y[S==s & A==0] - tauhat*D[S==s & A==0])
     }
   } else {
-    for (j in 1:length(stratnum)) {
-      s <- stratnum[j]
+    for (j in 1:length(stratum)) {
+      s <- stratum[j]
       vXi_hat_1[S==s] <- vXi_til_1[S==s] - mean(vXi_til_1[S==s & A==1])
       vXi_hat_0[S==s] <- vXi_til_0[S==s] - mean(vXi_til_0[S==s & A==0])
       vXi_2[S==s] <- mean(Y[S==s & A==1] - tauhat*D[S==s & A==1]) -

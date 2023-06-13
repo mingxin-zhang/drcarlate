@@ -3,7 +3,7 @@
 #'  Pihat computes the targeted treatment assignment probabilities across all strata in Jiang et al. (2022) and stacks them in an nx1 vector.
 #' @param A A nx1 vector.
 #' @param S A nx1 vector.
-#' @param stratnum A nx1 vector about the unique strara numbers, the default value is NULL.
+#' @param stratum A vector about the unique value for stratum, the length is unique(S),the default value is NULL.
 
 #' @return A nx1 cector, each element corresponds to the targeted treatment assignment probabilities across all strata in Jiang et al. (2022).
 #' @export
@@ -14,19 +14,19 @@
 #' S <- DGP[["S"]]
 #' pihat(A = A, S = S)
 #'
-pihat <- function(A, S, stratnum = NULL) {
+pihat <- function(A, S, stratum = NULL) {
   vPihat  <- NaN*ones(length(A),1)
 
-  if (is.null(stratnum)) {
+  if (is.null(stratum)) {
     for (s in 1:max(S)) {
       ns <-  sum(S == s)
       n1s <- sum(S == s & A == 1)
       pi_s <- n1s/ns
       vPihat[S == s] <- pi_s
     }
-  } else if (!is.null(stratnum)) {
-    for (j in 1:length(stratnum)) {
-      s <- stratnum[j]
+  } else if (!is.null(stratum)) {
+    for (j in 1:length(stratum)) {
+      s <- stratum[j]
       ns <-  sum(S==s)
       nls <-  sum(S == s & A == 1)
       pi_s <- nls/ns

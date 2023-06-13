@@ -4,7 +4,7 @@
 \alias{stanE}
 \title{Compute the Estimated Standard Error of the Input Estimator}
 \usage{
-stanE(muY1, muY0, muD1, muD0, A, S, Y, D, tauhat, stratnum = NULL)
+stanE(muY1, muY0, muD1, muD0, A, S, Y, D, tauhat, stratum = NULL)
 }
 \arguments{
 \item{muY1}{A nx1 vector of hat\{mu\}^Y(A=1)s.}
@@ -25,7 +25,7 @@ stanE(muY1, muY0, muD1, muD0, A, S, Y, D, tauhat, stratnum = NULL)
 
 \item{tauhat}{A scalar. LATE estimate.}
 
-\item{stratnum}{A scalar. Number of stratum.}
+\item{stratum}{A vector about the unique value for stratum, the length is unique(S),the default value is NULL.}
 }
 \value{
 A scalar. The estimated standard deviation in Jiang et al. (2022).

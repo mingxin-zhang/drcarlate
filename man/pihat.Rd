@@ -4,14 +4,14 @@
 \alias{pihat}
 \title{Compute Estimated Treatment Assignment Probabilities}
 \usage{
-pihat(A, S, stratnum = NULL)
+pihat(A, S, stratum = NULL)
 }
 \arguments{
 \item{A}{A nx1 vector.}
 
 \item{S}{A nx1 vector.}
 
-\item{stratnum}{A nx1 vector about the unique strara numbers, the default value is NULL.}
+\item{stratum}{A vector about the unique value for stratum, the length is unique(S),the default value is NULL.}
 }
 \value{
 A nx1 cector, each element corresponds to the targeted treatment assignment probabilities across all strata in Jiang et al. (2022).

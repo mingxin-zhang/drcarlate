@@ -11,7 +11,9 @@
 #' @param iridge A scalar. The penalization parameter in ridge regression.
 #' @param seed A scalar. The random seed, the authors set seed = 1 in Jiang et al. (2022).
 
-#' @return A table summarizing the estimated results, mProd.
+#' @return A table summarizing the estimated results, mProd. The for columns in mProd are for SRS, WEI, BCD, and SBR, respectively.
+#' The eight rows in mProd are for NA, L, NL, F, NP, R for dgytype = 3, TSLS, and R for i = 1 or 2, respectively.
+
 #' @export
 #' @references Jiang L, Linton O B, Tang H, Zhang Y. Improving estimation efficiency via regression-adjustment in covariate-adaptive randomizations with imperfect compliance [J]. 2022.
 #' @examples

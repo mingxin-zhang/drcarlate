@@ -8,7 +8,7 @@
 #' @param S A nx1 vector. Each of its elements is the stratum of corresponding observation.
 #' @param Y A nx1 vector. Each of its elements is the observed outcome of interest of corresponding observation.
 #' @param D A nx1 vector. Each of its elements is is a binary random variable indicating whether the individual i received treatment (Di = 1) or not (Di = 0) in the actual study.
-#' @param stratnum A nx1 vector about the unique strata numbers, the default value is NULL.
+#' @param stratum A vector about the unique value for stratum, the length is unique(S),the default value is NULL.
 
 #' @return A scalar. LATE estimate.
 #'
@@ -28,8 +28,8 @@
 #' tau(muY1, muY0, muD1, muD0, A, S, Y, D)
 #'
 #'
-tau <- function(muY1, muY0, muD1, muD0, A, S, Y, D, stratnum = NULL) {
-  vPihat <-  pihat(A = A, S = S, stratnum = stratnum)
+tau <- function(muY1, muY0, muD1, muD0, A, S, Y, D, stratum = NULL) {
+  vPihat <-  pihat(A = A, S = S, stratum = stratum)
   iDe <- mean(A*(D-muD1)/vPihat-(1-A)*(D-muD0)/(1-vPihat)+muD1-muD0)
   iNu <- mean(A*(Y-muY1)/vPihat-(1-A)*(Y-muY0)/(1-vPihat)+muY1-muY0)
   tauhat <- iNu/iDe

@@ -4,7 +4,7 @@
 \alias{tau}
 \title{Compute Estimated LATE}
 \usage{
-tau(muY1, muY0, muD1, muD0, A, S, Y, D, stratnum = NULL)
+tau(muY1, muY0, muD1, muD0, A, S, Y, D, stratum = NULL)
 }
 \arguments{
 \item{muY1}{A nx1 vector of hat\{mu\}^Y(A=1)s.}
@@ -23,7 +23,7 @@ tau(muY1, muY0, muD1, muD0, A, S, Y, D, stratnum = NULL)
 
 \item{D}{A nx1 vector. Each of its elements is is a binary random variable indicating whether the individual i received treatment (Di = 1) or not (Di = 0) in the actual study.}
 
-\item{stratnum}{A nx1 vector about the unique strata numbers, the default value is NULL.}
+\item{stratum}{A vector about the unique value for stratum, the length is unique(S),the default value is NULL.}
 }
 \value{
 A scalar. LATE estimate.

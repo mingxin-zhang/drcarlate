@@ -27,7 +27,8 @@ respectively corresponding to the three random data generation methods in the pa
 \item{seed}{A scalar. The random seed, the authors set seed = 1 in Jiang et al. (2022).}
 }
 \value{
-A table summarizing the estimated results, mProd.
+A table summarizing the estimated results, mProd. The for columns in mProd are for SRS, WEI, BCD, and SBR, respectively.
+The eight rows in mProd are for NA, L, NL, F, NP, R for dgytype = 3, TSLS, and R for i = 1 or 2, respectively.
 }
 \description{
 Helps the user reproduce the results of the data simulation section of Jiang et al. (2022).

@@ -215,7 +215,7 @@ data1 <- as.matrix(data_table)
 
 colnames(data1) <- NULL
 
-# create S for wave 1: number of stratnum, total 41 stratnum
+# create S for wave 1: number of stratum, total 41 stratum
 n <- size(data1,1)
 S <- zeros(n,1)
 for (i in 1:41) {
@@ -259,8 +259,8 @@ for (i in 1:8) {
   n <- size(data_used,1)
   n_vec[i] <- n
 
-  # find the unique value for stratnum
-  stratnum <-  sort(base::unique(data_used[, size(data_used,2)]))
+  # find the unique value for stratum
+  stratum <-  sort(base::unique(data_used[, size(data_used,2)]))
 
   # create A
   A <-  matrix(data_used[, 2])
@@ -290,17 +290,17 @@ for (i in 1:8) {
   muD1_z <- zeros(n,1)
 
   vtauhat[i,1] <- tau(muY1 = muY1_z, muY0 = muY0_z, muD1 = muD1_z, muD0 = muD0_z,
-                      A = A, S = S, Y = Y, D = D, stratnum = stratnum)
+                      A = A, S = S, Y = Y, D = D, stratum = stratum)
   vsighat[i,1] <- stanE(muY1 = muY1_z, muY0 = muY0_z, muD1 = muD1_z, muD0 = muD0_z,
-                        A = A, S = S, Y = Y, D = D, tauhat = vtauhat[i,1], stratnum = stratnum)/sqrt(n)
+                        A = A, S = S, Y = Y, D = D, tauhat = vtauhat[i,1], stratum = stratum)/sqrt(n)
 
   #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
   #  %% TSLS
   #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-  mS_iv <- zeros(n, length(stratnum))
+  mS_iv <- zeros(n, length(stratum))
 
-  for (j in 1:length(stratnum)) {
-    s <- stratnum[j]
+  for (j in 1:length(stratum)) {
+    s <- stratum[j]
     mS_iv[S==s, j] <- 1
   }
 
@@ -321,8 +321,8 @@ for (i in 1:8) {
   muY1_a <- NaN*ones(n,1)
   muD0_a <- NaN*ones(n,1)
   muD1_a <- NaN*ones(n,1)
-  for (j in 1:length(stratnum)) {
-    s = stratnum[j]
+  for (j in 1:length(stratum)) {
+    s = stratum[j]
 
     result <- LinearLogit(Y = Y, D = D, A = A, X = X, S = S, s = s, modelflag = 1, iridge = iridge)
 
@@ -338,9 +338,9 @@ for (i in 1:8) {
   }
 
   vtauhat[i,3] <- tau(muY1 = muY1_a, muY0 = muY0_a, muD1 = muD1_a, muD0 = muD0_a,
-                      A = A, S = S, Y = Y, D = D, stratnum = stratnum)
+                      A = A, S = S, Y = Y, D = D, stratum = stratum)
   vsighat[i,3] <- stanE(muY1 = muY1_a, muY0 = muY0_a, muD1 = muD1_a, muD0 = muD0_a,
-                        A = A, S = S, Y = Y, D = D, tauhat = vtauhat[i,3], stratnum = stratnum)/sqrt(n)
+                        A = A, S = S, Y = Y, D = D, tauhat = vtauhat[i,3], stratum = stratum)/sqrt(n)
   #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
   #  %% Linear+logistic model (NL)
   #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -349,8 +349,8 @@ for (i in 1:8) {
   muD0_b <- NaN*ones(n,1)
   muD1_b <- NaN*ones(n,1)
 
-  for (j in 1:length(stratnum)) {
-    s = stratnum[j]
+  for (j in 1:length(stratum)) {
+    s = stratum[j]
 
     result <- LinearLogit(Y = Y, D = D, A = A, X = X, S = S, s = s, modelflag = 2, iridge = iridge)
 
@@ -366,9 +366,9 @@ for (i in 1:8) {
   }
 
   vtauhat[i,4] <- tau(muY1 = muY1_b, muY0 = muY0_b, muD1 = muD1_b, muD0 = muD0_b,
-                      A = A, S = S, Y = Y, D = D, stratnum = stratnum)
+                      A = A, S = S, Y = Y, D = D, stratum = stratum)
   vsighat[i,4] <- stanE(muY1 = muY1_b, muY0 = muY0_b, muD1 = muD1_b, muD0 = muD0_b,
-                        A = A, S = S, Y = Y, D = D,tauhat = vtauhat[i,4], stratnum = stratnum)/sqrt(n)
+                        A = A, S = S, Y = Y, D = D,tauhat = vtauhat[i,4], stratum = stratum)/sqrt(n)
 
   #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
   #  %% Further Efficiency Improvement
@@ -379,8 +379,8 @@ for (i in 1:8) {
   muD0_c <- NaN*ones(n,1)
   muD1_c <- NaN*ones(n,1)
 
-  for (j in 1:length(stratnum)) {
-    s = stratnum[j]
+  for (j in 1:length(stratum)) {
+    s = stratum[j]
 
     result <- LinearLogit(Y = Y, D = D, A = A, X = X_c, S = S, s = s, modelflag = 1, iridge = iridge)
 
@@ -396,9 +396,9 @@ for (i in 1:8) {
   }
 
   vtauhat[i,5] <- tau(muY1 = muY1_c, muY0 = muY0_c, muD1 = muD1_c, muD0 = muD0_c,
-                      A = A, S = S, Y = Y, D = D, stratnum = stratnum)
+                      A = A, S = S, Y = Y, D = D, stratum = stratum)
   vsighat[i,5] <- stanE(muY1 = muY1_c, muY0 = muY0_c, muD1 = muD1_c, muD0 = muD0_c,
-                        A = A, S = S, Y = Y, D = D, tauhat = vtauhat[i,5], stratnum = stratnum)/sqrt(n)
+                        A = A, S = S, Y = Y, D = D, tauhat = vtauhat[i,5], stratum = stratum)/sqrt(n)
   }
 
 # show the LATE estimates and standard errors in Table 5 of Jiang et al.(2022). 
