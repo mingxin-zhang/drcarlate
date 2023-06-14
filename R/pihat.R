@@ -3,7 +3,7 @@
 #'  Pihat computes the targeted treatment assignment probabilities across all strata in Jiang et al. (2022) and stacks them in an nx1 vector.
 #' @param A A nx1 vector.
 #' @param S A nx1 vector.
-#' @param stratum A vector about the unique value for stratum, the length is unique(S),the default value is NULL.
+#' @param stratum A vector containing the stratum identifiers; no repetition allowed. For example, if S=c(2, 3, 2, 4), then we would set stratum=c(2, 3, 4). Note that if S contains all the integers from 1 to max(S), such as S = c(4, 1, 2, 4, 5, 3), there is no need specifying the stratum parameter. Its default value is NULL.
 
 #' @return A nx1 cector, each element corresponds to the targeted treatment assignment probabilities across all strata in Jiang et al. (2022).
 #' @export

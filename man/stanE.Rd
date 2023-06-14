@@ -25,7 +25,7 @@ stanE(muY1, muY0, muD1, muD0, A, S, Y, D, tauhat, stratum = NULL)
 
 \item{tauhat}{A scalar. LATE estimate.}
 
-\item{stratum}{A vector about the unique value for stratum, the length is unique(S),the default value is NULL.}
+\item{stratum}{A vector containing the stratum identifiers; no repetition allowed. For example, if S=c(2, 3, 2, 4), then we would set stratum=c(2, 3, 4). Note that if S contains all the integers from 1 to max(S), such as S = c(4, 1, 2, 4, 5, 3), there is no need specifying the stratum parameter. Its default value is NULL.}
 }
 \value{
 A scalar. The estimated standard deviation in Jiang et al. (2022).

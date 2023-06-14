@@ -9,7 +9,7 @@
 #' @param Y A nx1 vector. Each of its elements is the observed outcome of interest of corresponding observation.
 #' @param D A nx1 vector. Each of its elements is is a binary random variable indicating whether the individual i received treatment (Di = 1) or not (Di = 0) in the actual study.
 #' @param tauhat A scalar. LATE estimate.
-#' @param stratum A vector about the unique value for stratum, the length is unique(S),the default value is NULL.
+#' @param stratum A vector containing the stratum identifiers; no repetition allowed. For example, if S=c(2, 3, 2, 4), then we would set stratum=c(2, 3, 4). Note that if S contains all the integers from 1 to max(S), such as S = c(4, 1, 2, 4, 5, 3), there is no need specifying the stratum parameter. Its default value is NULL.
 
 #'
 #' @return A scalar. The estimated standard deviation in Jiang et al. (2022).
